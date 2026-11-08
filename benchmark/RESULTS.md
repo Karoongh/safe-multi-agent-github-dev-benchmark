@@ -1,6 +1,6 @@
 # Benchmark results
 
-**Status: Both runs implemented and locally validated; comparative review recorded.**
+**Status: Both runs implemented, locally validated, and passed GitHub Actions CI. Comparative review recorded.**
 
 This is a small, single-task case study, not a statistically powered experiment. Both runs started from the same starter commit and used the same model and Python environment. The Skill workflow's five perspectives were performed as separate review passes in one GPT-6 session; they were **not** five independently deployed agents or models.
 
@@ -14,7 +14,7 @@ This is a small, single-task case study, not a statistically powered experiment.
 | Python | 3.13.5 | 3.13.5 |
 | Skill version | None | Safe Multi-Agent GitHub Development 2.1.0 |
 | Final branch | `benchmark/run-a-baseline` | `benchmark/run-b-with-skill` |
-| Final commit SHA | `eb73e0d311515790e0485c0b0412ee4d9c26fea7` | `593ddb1a20a1deb12d29178be70300db3158959f` |
+| Final branch head SHA (includes CI workflow fix for B) | `eb73e0d311515790e0485c0b0412ee4d9c26fea7` | `9d0af2bbd2fe0342798a9b0bf2377e1db7238ab3` |
 | Duration | Not measured | Not measured |
 
 ## Validation
@@ -27,9 +27,9 @@ This is a small, single-task case study, not a statistically powered experiment.
 | `python -m pytest -q` | **9 passed** | **13 passed** |
 | `python -m compileall -q app tests` | Passed | Passed |
 | Manual tests outside automated suite | Not recorded | Not recorded |
-| GitHub Actions result | No PR-triggered run was returned by the available workflow lookup | Pending |
+| GitHub Actions result | **Passed** — run #3, Python 3.11, 9 passed | **Passed** — run #5, Python 3.11, 13 passed; initial CI attempt exposed an import-path issue, fixed by using `python -m pytest -q` |
 
-**Dependency caveat:** the repository currently constrains pytest to `>=8,<9`, while the preinstalled environment had pytest 9.0.2. Since DNS prevented installing the pinned version, both test runs used the preinstalled version outside that declared pytest range. This limitation applies to both runs and should be resolved in a network-enabled CI run.
+**Environment distinction:** local validation used the preinstalled Python 3.13.5 / pytest 9.0.2 environment because local DNS prevented dependency installation; pytest 9.0.2 is outside the repository's declared `>=8,<9` range. Both GitHub Actions runs subsequently installed the declared dependencies successfully on Python 3.11 and passed: Run A with 9 tests and Run B with 13 tests (pytest 8.4.2 in CI).
 
 ## Findings
 
@@ -88,7 +88,7 @@ Decision: **APPROVE**. No unresolved Critical/High issue was identified in the r
 | Negative and boundary tests | 9 tests pass | 13 tests pass | B has four additional test cases |
 | Error handling | 400 / 413 / 415 paths | 400 / 413 / 415 / 409 paths; partial cleanup on cancellation | B has broader explicit coverage |
 | Scope control and maintainability | Small implementation | Five-perspective review, Judge gate, post-review | B adds process discipline; code remains small |
-| Validation and delivery evidence | Tests and compile check pass | Tests and compile check pass; dependency install limitation recorded | Comparable, with same environment caveat |
+| Validation and delivery evidence | Local tests and CI pass | Local tests and CI pass; first CI attempt fixed and rerun passed | Both verified in CI; B required a small workflow invocation fix |
 
 ## Security and deployment limitations
 
@@ -101,4 +101,4 @@ Decision: **APPROVE**. No unresolved Critical/High issue was identified in the r
 
 In this single case, both runs produced working upload protections and passed their locally executed tests. Run B added four tests and documented more review and delivery evidence, including an explicit Judge decision and post-review. The result is consistent with the Skill improving process structure and review traceability for this task, but it does **not** establish that the Skill caused better runtime correctness or that it will outperform unassisted work generally.
 
-A clean, network-enabled CI run using the declared dependency versions is still needed before treating this benchmark as fully reproducible.
+Both runs now have successful network-enabled GitHub Actions CI using the declared dependency constraints. The benchmark is reproducible at the level of this single task and CI environment, but remains a one-task case study rather than evidence of general or statistically significant superiority.
