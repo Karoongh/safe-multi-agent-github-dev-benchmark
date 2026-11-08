@@ -123,6 +123,6 @@ async def upload_file(file: UploadFile = File(...)):
             "size": total_size,
             "content_type": ALLOWED_CONTENT_TYPES[extension],
         }
-    except Exception:
+    except BaseException:
         destination.unlink(missing_ok=True)
         raise
