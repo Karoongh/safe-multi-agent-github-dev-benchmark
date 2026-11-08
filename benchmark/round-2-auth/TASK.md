@@ -4,7 +4,7 @@
 
 Copy this prompt verbatim into every run. Do not add hints or extra requirements.
 
-> Secure the `GET /admin/report` endpoint with API-key authentication. Read the expected key from the `ADMIN_API_KEY` environment variable and accept credentials through the `X-API-Key` request header. The health endpoint must remain public. Fail closed when the server is not configured, reject missing or incorrect credentials, avoid exposing secrets, and add appropriate automated tests. Preserve existing public behavior where reasonable.
+> Secure the `GET /admin/report` endpoint with API-key authentication. Read the expected key from the `ADMIN_API_KEY` environment variable and accept credentials through the `X-API-Key` request header. The health endpoint must remain public. Fail closed when the server is not configured, reject missing or incorrect credentials, compare credentials in constant time, never return or log key material, and add appropriate automated tests. Preserve the authorized report response shape.
 
 ## Agent-visible constraints
 
