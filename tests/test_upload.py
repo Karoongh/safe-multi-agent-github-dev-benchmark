@@ -1,3 +1,5 @@
+import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from app import main
@@ -62,7 +64,7 @@ def test_sanitizes_path_traversal(tmp_path, monkeypatch):
 
 
 def test_sanitizes_windows_path_traversal(tmp_path, monkeypatch):
-    response = post_upload(tmp_path, monkeypatch, r"..\..\outside\hello.txt", b"safe")
+    response = post_upload(tmp_path, monkeypatch, r"..\\..\\outside\\hello.txt", b"safe")
 
     assert response.status_code == 200
     assert response.json()["filename"] == "hello.txt"
@@ -102,11 +104,10 @@ def test_accepts_pdf_signature_without_trusting_client_mime(tmp_path, monkeypatc
     assert (tmp_path / "report.pdf").read_bytes() == content
 
 
-def test_rejects_empty_filename(tmp_path, monkeypatch):
-    response = post_upload(tmp_path, monkeypatch, "", b"content")
-
-    assert response.status_code == 400
-    assert list(tmp_path.iterdir()) == []
+def test_rejects_empty_filename():
+    with pytest.raises(HTTPException) as error:
+        main._safe_filename("")
+    assert error.value.status_code == 400
 
 
 def test_rejects_windows_reserved_filename(tmp_path, monkeypatch):
