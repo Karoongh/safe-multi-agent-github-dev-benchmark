@@ -1,6 +1,12 @@
+import sys
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
-from benchmark.round_2_auth.starter.app.main import app
+FIXTURE_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(FIXTURE_ROOT))
+
+from app.main import app  # noqa: E402
 
 client = TestClient(app)
 
