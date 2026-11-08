@@ -1,6 +1,6 @@
 # Benchmark results
 
-<badge>Not yet run</badge>
+**Status: Not yet run**
 
 This document is a record template. It must be completed only after the two runs have actually been performed and checked. Do not fill unknown values with estimates.
 
