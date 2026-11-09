@@ -1,0 +1,31 @@
+name: Round 2 API authentication benchmark
+
+on:
+  push:
+    branches:
+      - benchmark/round-2-auth-starter
+      - benchmark/round-2-auth-run-*
+  pull_request:
+    branches: [main]
+    paths:
+      - "benchmark/round-2-auth/**"
+      - ".github/workflows/round-2-auth.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run round 2 starter tests
+        run: python -m pytest -q benchmark/round-2-auth/starter/tests
+      - name: Compile round 2 starter
+        run: python -m compileall -q benchmark/round-2-auth/starter
