@@ -1,3 +1,4 @@
+import hmac
 import os
 
 from fastapi import FastAPI, Header, HTTPException
@@ -10,13 +11,18 @@ async def health():
     return {"status": "ok"}
 
 
+def _configured_api_key() -> str:
+    return os.getenv("ADMIN_API_KEY", "")
+
+
 @app.get("/admin/report")
 async def admin_report(x_api_key: str | None = Header(default=None)):
-    # Intentionally insecure starter behavior for the benchmark:
-    # a predictable fallback key is used and configuration is not fail-closed.
-    expected_key = os.getenv("ADMIN_API_KEY", "dev-secret")
+    expected_key = _configured_api_key()
 
-    if x_api_key != expected_key:
+    if not expected_key:
+        raise HTTPException(status_code=503, detail="Authentication is not configured")
+
+    if x_api_key is None or not hmac.compare_digest(x_api_key, expected_key):
         raise HTTPException(status_code=401, detail="Invalid API key")
 
     return {
