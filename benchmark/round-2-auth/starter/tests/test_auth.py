@@ -21,6 +21,41 @@ def test_health_is_public():
     assert response.json() == {"status": "ok"}
 
 
+def test_admin_report_fails_closed_when_key_is_missing(monkeypatch):
+    monkeypatch.delenv("ADMIN_API_KEY", raising=False)
+
+    response = client.get("/admin/report")
+
+    assert response.status_code == 503
+
+
+def test_admin_report_fails_closed_when_key_is_blank(monkeypatch):
+    monkeypatch.setenv("ADMIN_API_KEY", "")
+
+    response = client.get("/admin/report", headers={"X-API-Key": ""})
+
+    assert response.status_code == 503
+
+
+def test_admin_report_rejects_missing_key(monkeypatch):
+    monkeypatch.setenv("ADMIN_API_KEY", "benchmark-test-key")
+
+    response = client.get("/admin/report")
+
+    assert response.status_code == 401
+
+
+def test_admin_report_rejects_wrong_key(monkeypatch):
+    monkeypatch.setenv("ADMIN_API_KEY", "benchmark-test-key")
+
+    response = client.get(
+        "/admin/report",
+        headers={"X-API-Key": "wrong-key"},
+    )
+
+    assert response.status_code == 401
+
+
 def test_admin_report_authorized_response_shape(monkeypatch):
     monkeypatch.setenv("ADMIN_API_KEY", "benchmark-test-key")
 
