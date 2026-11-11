@@ -19,3 +19,12 @@ Validation:
 - final diff inspection
 
 The benchmark runner must execute this exact prompt once with the skill disabled (A) and once with Efficient Coding Agent 3.0.0 enabled (B), from the same starter commit, in fresh isolated sessions. No manual repair is permitted.
+
+
+## Recorded pilot data
+
+Observed T01 A/B pilot runs are recorded in:
+- `benchmark/v3/T01-RUNS.json` — machine-readable raw run data.
+- `benchmark/v3/T01-RESULTS.md` — human-readable paired observations and limitations.
+
+These files record pilot observations only; they do not claim a general efficiency improvement.
