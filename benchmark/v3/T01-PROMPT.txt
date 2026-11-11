@@ -1,0 +1,1 @@
+Fix the bug in app/main.py so that the upload endpoint rejects empty filenames with HTTP 400 while preserving all existing valid upload behavior. Add a focused regression test. Do not refactor unrelated code.
