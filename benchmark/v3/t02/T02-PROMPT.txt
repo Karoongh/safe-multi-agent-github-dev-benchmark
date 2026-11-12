@@ -1,0 +1,10 @@
+Implement the requested project-deletion behavior in the T02 fixture.
+
+Add DELETE /projects/{project_id} so that:
+- deleting an existing project returns HTTP 204;
+- deleting a missing project returns HTTP 404;
+- all memberships belonging to the deleted project are removed as part of the same operation;
+- other projects and their memberships remain unchanged;
+- existing project creation, retrieval, and membership behavior remains unchanged.
+
+Add focused regression tests covering successful deletion with membership cleanup, missing-project deletion, and preservation of another project's data. Do not refactor unrelated code.
